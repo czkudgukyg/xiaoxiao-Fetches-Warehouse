@@ -47,10 +47,16 @@ jobs:
       - name: Run verifier
         id: scrape
         continue-on-error: true
-        env:
-          GITHUB_EVENT_PATH: ${{ github.workspace }}/synthetic_event.json
         run: |
-          python xiaoxiao-Fetches-Warehouse-V2/scraper/scrape.py > reports_console.txt 2>&1
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('xiaoxiao-Fetches-Warehouse-V2/scraper/scrape.py')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace("Path(os.environ['GITHUB_EVENT_PATH'])", "Path(os.environ.get('SCRAPER_EVENT_PATH', os.environ['GITHUB_EVENT_PATH']))")
+          p.write_text(s, encoding='utf-8')
+          PY
+          SCRAPER_EVENT_PATH="${{ github.workspace }}/synthetic_event.json" \
+            python xiaoxiao-Fetches-Warehouse-V2/scraper/scrape.py > reports_console.txt 2>&1
 
       - name: Enforce redirect safety and rebuild report
         if: always()
