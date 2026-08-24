@@ -1,0 +1,72 @@
+name: On-demand competitor scrape
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  scrape:
+    if: startsWith(github.event.issue.title, '[SCRAPE]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Playwright
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r xiaoxiao-Fetches-Warehouse-V2/requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Run verifier
+        id: scrape
+        continue-on-error: true
+        run: |
+          python xiaoxiao-Fetches-Warehouse-V2/scraper/scrape.py > reports_console.txt 2>&1
+
+      - name: Ensure failure report exists
+        if: always()
+        run: |
+          mkdir -p reports
+          if [ ! -f reports/result.md ]; then
+            {
+              echo "## Scrape failed"
+              echo
+              echo "The browser job did not produce a verified result. No price has been reported."
+              echo
+              echo '```'
+              tail -n 120 reports_console.txt || true
+              echo '```'
+            } > reports/result.md
+          fi
+
+      - name: Comment result back to issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" \
+            --repo "${{ github.repository }}" \
+            --body-file reports/result.md
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scrape-evidence-${{ github.event.issue.number }}
+          path: |
+            reports/
+            reports_console.txt
+          if-no-files-found: warn
+          retention-days: 30
