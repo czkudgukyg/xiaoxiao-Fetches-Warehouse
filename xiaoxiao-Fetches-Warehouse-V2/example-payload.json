@@ -1,0 +1,16 @@
+{
+  "targets": [
+    {
+      "region": "US",
+      "product": "P2S",
+      "variant": "P2S Combo",
+      "url": "https://us.store.bambulab.com/products/p2s"
+    },
+    {
+      "region": "AU",
+      "product": "Creality K2 Plus Combo 3D Printer",
+      "variant": "",
+      "url": "https://store.creality.com/au/products/creality-k2-plus-combo-3d-printer"
+    }
+  ]
+}
