@@ -52,6 +52,61 @@ jobs:
         run: |
           python xiaoxiao-Fetches-Warehouse-V2/scraper/scrape.py > reports_console.txt 2>&1
 
+      - name: Enforce redirect safety and rebuild report
+        if: always()
+        run: |
+          if [ -f reports/result.json ]; then
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          from urllib.parse import urlparse
+
+          p = Path('reports/result.json')
+          data = json.loads(p.read_text(encoding='utf-8'))
+          rows = data.get('results', [])
+
+          for r in rows:
+              req_path = urlparse(r.get('requested_url','')).path.rstrip('/')
+              final_path = urlparse(r.get('final_url','')).path.rstrip('/')
+              if req_path and final_path and req_path != final_path:
+                  r['status'] = 'REDIRECTED_OTHER_PRODUCT'
+                  r['current_price'] = ''
+                  r['original_price'] = ''
+                  r['stock'] = ''
+                  r['method'] = ''
+                  r['reason'] = 'Requested product URL redirected to a different product path. No requested-product price reported.'
+
+          p.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding='utf-8')
+
+          out = [
+              '## Scrape result','',
+              '| Region | Product | Variant | Current price | Original price | Stock | Status |',
+              '|---|---|---|---:|---:|---|---|'
+          ]
+          for r in rows:
+              out.append(
+                  f"| {r.get('region') or '-'} | {r.get('requested_product') or '-'} | {r.get('requested_variant') or '-'} | "
+                  f"{r.get('current_price') or '**—**'} | {r.get('original_price') or '—'} | {r.get('stock') or '—'} | **{r.get('status') or 'UNVERIFIED'}** |"
+              )
+          out += ['', '### Verification details', '']
+          for r in rows:
+              out += [
+                  f"**{r.get('region') or '-'} — {r.get('requested_variant') or r.get('requested_product') or '-'}**",
+                  f"- Requested URL: {r.get('requested_url') or '—'}",
+                  f"- Final URL: {r.get('final_url') or '—'}",
+                  f"- Method: {r.get('method') or '—'}",
+                  f"- Reason: {r.get('reason') or '—'}"
+              ]
+              if r.get('evidence'):
+                  out.append(f"- Evidence: `{r.get('evidence')[:800]}`")
+              if r.get('promotion'):
+                  out.append(f"- Promotion text: {r.get('promotion')[:800]}")
+              out.append('')
+          out += ['---', '**Hard rule:** anything not `VERIFIED` gets no guessed/backfilled price.']
+          Path('reports/result.md').write_text('\n'.join(out), encoding='utf-8')
+          PY
+          fi
+
       - name: Ensure failure report exists
         if: always()
         run: |
@@ -67,6 +122,8 @@ jobs:
               echo '```'
             } > reports/result.md
           fi
+          echo >> reports/result.md
+          echo "Run ID: ${{ github.run_id }}" >> reports/result.md
 
       - name: Comment result back to request issue
         if: always()
