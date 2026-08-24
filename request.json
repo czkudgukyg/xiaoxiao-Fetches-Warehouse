@@ -1,0 +1,35 @@
+{
+  "issue_number": 3,
+  "targets": [
+    {
+      "region": "US",
+      "product": "Creality Hi Combo 3D Printer",
+      "variant": "",
+      "url": "https://store.creality.com/products/creality-hi-combo-3d-printer?spm=..index.slick_image_2.1"
+    },
+    {
+      "region": "EU",
+      "product": "Creality Hi Combo 3D Printer",
+      "variant": "",
+      "url": "https://store.creality.com/eu/products/creality-hi-combo-3d-printer?spm=..index.slick_image_1.1&spm_prev=..product_f2116bf8-1af7-439a-ad81-5783336b5549.announcement_1.1&variant=0d38dd86-8aea-408f-af2c-aa87e39f9ed4"
+    },
+    {
+      "region": "UK",
+      "product": "Creality Hi Combo 3D Printer",
+      "variant": "",
+      "url": "https://store.creality.com/uk/products/creality-hi-combo-3d-printer?spm=..index.slick_image_1.1&spm_prev=..product_f2116bf8-1af7-439a-ad81-5783336b5549.announcement_1.1&variant=415a829d-62a7-4137-bb7f-dc1cb9724486"
+    },
+    {
+      "region": "AU",
+      "product": "Creality Hi Combo 3D Printer",
+      "variant": "",
+      "url": "https://store.creality.com/au/products/creality-hi-combo-3d-printer?q=hi&_pos=1&_psq=hi&_ss=e&_v=1.0"
+    },
+    {
+      "region": "CA",
+      "product": "Creality Hi Combo 3D Printer",
+      "variant": "",
+      "url": "https://store.creality.com/ca/products/creality-hi-combo-3d-printer?q=hI&_pos=1&_psq=hI&_ss=e&_v=1.0"
+    }
+  ]
+}
