@@ -1,8 +1,10 @@
 name: On-demand competitor scrape
 
 on:
-  issues:
-    types: [opened]
+  push:
+    paths:
+      - 'request.json'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -10,7 +12,6 @@ permissions:
 
 jobs:
   scrape:
-    if: startsWith(github.event.issue.title, '[SCRAPE]')
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -29,9 +30,25 @@ jobs:
           pip install -r xiaoxiao-Fetches-Warehouse-V2/requirements.txt
           python -m playwright install --with-deps chromium
 
+      - name: Build scraper event payload
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          req = json.loads(Path('request.json').read_text(encoding='utf-8'))
+          payload = {'targets': req['targets']}
+          body = '```json\n' + json.dumps(payload, ensure_ascii=False, indent=2) + '\n```'
+          Path('synthetic_event.json').write_text(
+              json.dumps({'issue': {'body': body}}, ensure_ascii=False),
+              encoding='utf-8'
+          )
+          PY
+
       - name: Run verifier
         id: scrape
         continue-on-error: true
+        env:
+          GITHUB_EVENT_PATH: ${{ github.workspace }}/synthetic_event.json
         run: |
           python xiaoxiao-Fetches-Warehouse-V2/scraper/scrape.py > reports_console.txt 2>&1
 
@@ -51,12 +68,13 @@ jobs:
             } > reports/result.md
           fi
 
-      - name: Comment result back to issue
+      - name: Comment result back to request issue
         if: always()
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh issue comment "${{ github.event.issue.number }}" \
+          ISSUE_NUMBER=$(python -c "import json; print(json.load(open('request.json'))['issue_number'])")
+          gh issue comment "$ISSUE_NUMBER" \
             --repo "${{ github.repository }}" \
             --body-file reports/result.md
 
@@ -64,9 +82,10 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: scrape-evidence-${{ github.event.issue.number }}
+          name: scrape-evidence-${{ github.run_id }}
           path: |
             reports/
             reports_console.txt
+            request.json
           if-no-files-found: warn
           retention-days: 30
