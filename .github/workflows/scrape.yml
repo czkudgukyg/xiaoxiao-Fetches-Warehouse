@@ -1,0 +1,53 @@
+name: Competitor price scrape
+on:
+  workflow_dispatch:
+    inputs:
+      brand: {description: Brand, required: false, type: string}
+      region: {description: Region, required: false, type: string}
+      product: {description: Product, required: false, type: string}
+      variant: {description: Variant, required: false, type: string}
+      url: {description: Official product URL, required: false, type: string}
+      batch_json: {description: Optional JSON target array, required: false, type: string}
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip}
+      - run: pip install -r requirements.txt
+      - run: playwright install --with-deps chromium
+      - name: Validate input
+        env:
+          BATCH: ${{ inputs.batch_json }}
+          BRAND: ${{ inputs.brand }}
+          REGION: ${{ inputs.region }}
+          PRODUCT: ${{ inputs.product }}
+          VARIANT: ${{ inputs.variant }}
+          URL: ${{ inputs.url }}
+        run: test -n "$BATCH" || { test -n "$BRAND" && test -n "$REGION" && test -n "$PRODUCT" && test -n "$VARIANT" && test -n "$URL"; }
+      - name: Scrape batch
+        if: inputs.batch_json != ''
+        env: {BATCH_JSON: "${{ inputs.batch_json }}"}
+        run: python -m scraper.main --batch "$BATCH_JSON"
+      - name: Scrape one target
+        if: inputs.batch_json == ''
+        env:
+          BRAND: ${{ inputs.brand }}
+          REGION: ${{ inputs.region }}
+          PRODUCT: ${{ inputs.product }}
+          VARIANT: ${{ inputs.variant }}
+          TARGET_URL: ${{ inputs.url }}
+        run: >-
+          python -m scraper.main --brand "$BRAND" --region "$REGION"
+          --product "$PRODUCT" --variant "$VARIANT" --url "$TARGET_URL"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: competitor-scrape-result
+          path: |
+            reports/
+            screenshots/
+          if-no-files-found: warn
