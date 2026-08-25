@@ -25,6 +25,11 @@ class CheckoutDiscountTests(unittest.TestCase):
         # Regression test for the exact error that previously produced £319.
         self.check('UK', '£399', '£60 Off Applied at Checkout', '£60', '£339')
 
+    def test_flashforge_uk_fullwidth_pound_regression(self):
+        # Flashforge UK currently renders a compatibility/fullwidth pound sign: ￡60.
+        # It must normalize to £60 before arithmetic.
+        self.check('UK', '£399', '￡60 Off Applied at Checkout', '£60', '£339')
+
     def test_flashforge_au(self):
         self.check('AU', 'A$749', 'A$180 Off Applied at Checkout', 'A$180', 'A$569')
 
