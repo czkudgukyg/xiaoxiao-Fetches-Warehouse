@@ -48,6 +48,10 @@ jobs:
         run: |
           python runtime_patch.py
 
+      - name: Run price-logic regression tests
+        run: |
+          python -m unittest discover -s tests -p 'test_*.py' -v
+
       - name: Run verifier
         id: scrape
         continue-on-error: true
@@ -75,21 +79,34 @@ jobs:
                   r['status'] = 'REDIRECTED_OTHER_PRODUCT'
                   r['current_price'] = ''
                   r['original_price'] = ''
+                  r['automatic_discount'] = ''
+                  r['final_price'] = ''
+                  r['discount_status'] = 'SKIPPED'
+                  r['discount_reason'] = 'Redirected to a different product; checkout discount calculation was skipped.'
+                  r['discount_evidence'] = ''
                   r['stock'] = ''
                   r['method'] = ''
                   r['reason'] = 'Requested product URL redirected to a different product path. No requested-product price reported.'
+
+              # Final price is forbidden unless the automatic checkout discount itself
+              # was VERIFIED. This prevents manual/inferred discount arithmetic.
+              if r.get('discount_status') != 'VERIFIED':
+                  r['automatic_discount'] = ''
+                  r['final_price'] = ''
 
           p.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding='utf-8')
 
           out = [
               '## Scrape result','',
-              '| Region | Product | Variant | Current price | Original price | Stock | Status |',
-              '|---|---|---|---:|---:|---|---|'
+              '| Region | Product | Variant | Current price | Original price | Auto checkout discount | Final price | Stock | Status |',
+              '|---|---|---|---:|---:|---:|---:|---|---|'
           ]
           for r in rows:
               out.append(
                   f"| {r.get('region') or '-'} | {r.get('requested_product') or '-'} | {r.get('requested_variant') or '-'} | "
-                  f"{r.get('current_price') or '**—**'} | {r.get('original_price') or '—'} | {r.get('stock') or '—'} | **{r.get('status') or 'UNVERIFIED'}** |"
+                  f"{r.get('current_price') or '**—**'} | {r.get('original_price') or '—'} | "
+                  f"{r.get('automatic_discount') or '—'} | {r.get('final_price') or '—'} | "
+                  f"{r.get('stock') or '—'} | **{r.get('status') or 'UNVERIFIED'}** |"
               )
           out += ['', '### Verification details', '']
           for r in rows:
@@ -98,14 +115,22 @@ jobs:
                   f"- Requested URL: {r.get('requested_url') or '—'}",
                   f"- Final URL: {r.get('final_url') or '—'}",
                   f"- Method: {r.get('method') or '—'}",
-                  f"- Reason: {r.get('reason') or '—'}"
+                  f"- Reason: {r.get('reason') or '—'}",
+                  f"- Checkout discount status: {r.get('discount_status') or '—'}",
+                  f"- Checkout discount reason: {r.get('discount_reason') or '—'}"
               ]
               if r.get('evidence'):
-                  out.append(f"- Evidence: `{r.get('evidence')[:800]}`")
+                  out.append(f"- Price evidence: `{r.get('evidence')[:800]}`")
+              if r.get('discount_evidence'):
+                  out.append(f"- Checkout discount evidence: `{r.get('discount_evidence')[:800]}`")
               if r.get('promotion'):
                   out.append(f"- Promotion text: {r.get('promotion')[:800]}")
               out.append('')
-          out += ['---', '**Hard rule:** anything not `VERIFIED` gets no guessed/backfilled price.']
+          out += [
+              '---',
+              '**Hard rules:** anything not `VERIFIED` gets no guessed/backfilled product price; '
+              'a final checkout price is shown only when `discount_status=VERIFIED` from explicit same-page checkout evidence.'
+          ]
           Path('reports/result.md').write_text('\n'.join(out), encoding='utf-8')
           PY
           fi
