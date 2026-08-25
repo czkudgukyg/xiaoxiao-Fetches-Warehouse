@@ -1,4 +1,5 @@
 import re
+import unicodedata
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 
 CURRENCY_RE = re.compile(r'(?P<currency>US\$|CA\$|AU\$|A\$|C\$|\$|€|£)\s*(?P<amount>\d[\d,.]*)', re.I)
@@ -18,11 +19,14 @@ REGION_CURRENCY = {
 
 
 def _compact(text):
-    return re.sub(r'\s+', ' ', text or '').strip()
+    # NFKC normalizes compatibility characters such as Flashforge's fullwidth
+    # pound sign "￡" into the standard "£" before any price parsing.
+    text = unicodedata.normalize('NFKC', text or '')
+    return re.sub(r'\s+', ' ', text).strip()
 
 
 def _decimal_number(raw):
-    s = (raw or '').strip().replace(' ', '')
+    s = _compact(raw).replace(' ', '')
     if not s:
         return None
     # Handle 1,299.00 and 1.299,00 conservatively by treating the last separator as decimal.
@@ -46,7 +50,7 @@ def _decimal_number(raw):
 
 
 def canonical_currency(symbol, region=''):
-    sym = (symbol or '').upper().replace(' ', '')
+    sym = _compact(symbol).upper().replace(' ', '')
     region = (region or '').upper()
     if sym == '€':
         return 'EUR'
@@ -64,7 +68,8 @@ def canonical_currency(symbol, region=''):
 
 
 def parse_money(text, region=''):
-    m = CURRENCY_RE.search(text or '')
+    normalized = _compact(text)
+    m = CURRENCY_RE.search(normalized)
     if not m:
         return None
     amount = _decimal_number(m.group('amount'))
