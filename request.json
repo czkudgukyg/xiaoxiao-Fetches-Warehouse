@@ -1,12 +1,16 @@
 {
-  "issue_number": 6,
-  "request_id": "2026-08-25T11:38:30+08:00",
+  "issue_number": 7,
+  "request_id": "2026-08-28T14:43:00+08:00",
   "targets": [
-    {
-      "region": "UK",
-      "product": "Adventurer 5M Pro 3D Printer",
-      "variant": "",
-      "url": "https://uk.flashforge.com/products/adventurer-5m-pro-3d-printer"
-    }
+    {"region":"US","product":"A2L","variant":"A2L","url":"https://us.store.bambulab.com/products/a2l"},
+    {"region":"US","product":"A2L","variant":"A2L Combo","url":"https://us.store.bambulab.com/products/a2l"},
+    {"region":"EU","product":"A2L","variant":"A2L","url":"https://eu.store.bambulab.com/products/a2l?skr=yes"},
+    {"region":"EU","product":"A2L","variant":"A2L Combo","url":"https://eu.store.bambulab.com/products/a2l?skr=yes"},
+    {"region":"UK","product":"A2L","variant":"A2L","url":"https://uk.store.bambulab.com/products/a2l?skr=yes"},
+    {"region":"UK","product":"A2L","variant":"A2L Combo","url":"https://uk.store.bambulab.com/products/a2l?skr=yes"},
+    {"region":"AU","product":"A2L","variant":"A2L","url":"https://au.store.bambulab.com/products/a2l?skr=yes"},
+    {"region":"AU","product":"A2L","variant":"A2L Combo","url":"https://au.store.bambulab.com/products/a2l?skr=yes"},
+    {"region":"CA","product":"A2L","variant":"A2L","url":"https://ca.store.bambulab.com/products/a2l?skr=yes"},
+    {"region":"CA","product":"A2L","variant":"A2L Combo","url":"https://ca.store.bambulab.com/products/a2l?skr=yes"}
   ]
 }
