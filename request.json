@@ -1,16 +1,16 @@
 {
-  "issue_number": 7,
-  "request_id": "2026-08-28T14:43:00+08:00",
+  "issue_number": 8,
+  "request_id": "2026-08-28T15:23:40+08:00",
   "targets": [
-    {"region":"US","product":"A2L","variant":"A2L","url":"https://us.store.bambulab.com/products/a2l"},
-    {"region":"US","product":"A2L","variant":"A2L Combo","url":"https://us.store.bambulab.com/products/a2l"},
-    {"region":"EU","product":"A2L","variant":"A2L","url":"https://eu.store.bambulab.com/products/a2l?skr=yes"},
-    {"region":"EU","product":"A2L","variant":"A2L Combo","url":"https://eu.store.bambulab.com/products/a2l?skr=yes"},
-    {"region":"UK","product":"A2L","variant":"A2L","url":"https://uk.store.bambulab.com/products/a2l?skr=yes"},
-    {"region":"UK","product":"A2L","variant":"A2L Combo","url":"https://uk.store.bambulab.com/products/a2l?skr=yes"},
-    {"region":"AU","product":"A2L","variant":"A2L","url":"https://au.store.bambulab.com/products/a2l?skr=yes"},
-    {"region":"AU","product":"A2L","variant":"A2L Combo","url":"https://au.store.bambulab.com/products/a2l?skr=yes"},
-    {"region":"CA","product":"A2L","variant":"A2L","url":"https://ca.store.bambulab.com/products/a2l?skr=yes"},
-    {"region":"CA","product":"A2L","variant":"A2L Combo","url":"https://ca.store.bambulab.com/products/a2l?skr=yes"}
+    {"region":"US","product":"X2D","variant":"X2D","url":"https://us.store.bambulab.com/products/x2d?from=home_banner&skr=yes"},
+    {"region":"US","product":"X2D","variant":"X2D AMS Combo","url":"https://us.store.bambulab.com/products/x2d?from=home_banner&skr=yes"},
+    {"region":"EU","product":"X2D","variant":"X2D","url":"https://eu.store.bambulab.com/de/products/x2d?from=home_banner&skr=yes"},
+    {"region":"EU","product":"X2D","variant":"X2D AMS Combo","url":"https://eu.store.bambulab.com/de/products/x2d?from=home_banner&skr=yes"},
+    {"region":"UK","product":"X2D","variant":"X2D","url":"https://uk.store.bambulab.com/products/x2d?from=home_banner&skr=yes"},
+    {"region":"UK","product":"X2D","variant":"X2D AMS Combo","url":"https://uk.store.bambulab.com/products/x2d?from=home_banner&skr=yes"},
+    {"region":"AU","product":"X2D","variant":"X2D","url":"https://au.store.bambulab.com/products/x2d?from=home_banner&skr=yes"},
+    {"region":"AU","product":"X2D","variant":"X2D AMS Combo","url":"https://au.store.bambulab.com/products/x2d?from=home_banner&skr=yes"},
+    {"region":"CA","product":"X2D","variant":"X2D","url":"https://ca.store.bambulab.com/products/x2d?from=home_banner&skr=yes"},
+    {"region":"CA","product":"X2D","variant":"X2D AMS Combo","url":"https://ca.store.bambulab.com/products/x2d?from=home_banner&skr=yes"}
   ]
 }
