@@ -1,16 +1,11 @@
 {
-  "issue_number": 9,
-  "request_id": "2026-08-28T15:29:28+08:00",
+  "issue_number": 11,
+  "request_id": "2026-08-28T15:55:25+08:00",
   "targets": [
-    {"region":"US","product":"H2C","variant":"H2C","url":"https://us.store.bambulab.com/products/h2c"},
-    {"region":"US","product":"H2C","variant":"H2C AMS Combo","url":"https://us.store.bambulab.com/products/h2c"},
-    {"region":"EU","product":"H2C","variant":"H2C","url":"https://eu.store.bambulab.com/products/h2c?id=667505441262432266&skr=yes"},
-    {"region":"EU","product":"H2C","variant":"H2C AMS Combo","url":"https://eu.store.bambulab.com/products/h2c?id=667505441262432266&skr=yes"},
-    {"region":"UK","product":"H2C","variant":"H2C","url":"https://uk.store.bambulab.com/products/h2c?skr=yes"},
-    {"region":"UK","product":"H2C","variant":"H2C AMS Combo","url":"https://uk.store.bambulab.com/products/h2c?skr=yes"},
-    {"region":"AU","product":"H2C","variant":"H2C","url":"https://au.store.bambulab.com/products/h2c?skr=yes"},
-    {"region":"AU","product":"H2C","variant":"H2C AMS Combo","url":"https://au.store.bambulab.com/products/h2c?skr=yes"},
-    {"region":"CA","product":"H2C","variant":"H2C","url":"https://ca.store.bambulab.com/products/h2c?skr=yes"},
-    {"region":"CA","product":"H2C","variant":"H2C AMS Combo","url":"https://ca.store.bambulab.com/products/h2c?skr=yes"}
+    {"region":"US","product":"H2S","variant":"H2S","url":"https://us.store.bambulab.com/products/h2s?id=636696880147419141"},
+    {"region":"EU","product":"H2S","variant":"H2S","url":"https://eu.store.bambulab.com/products/h2s?id=636738543243517957"},
+    {"region":"UK","product":"H2S","variant":"H2S","url":"https://uk.store.bambulab.com/products/h2s?id=636733218679422981"},
+    {"region":"AU","product":"H2S","variant":"H2S","url":"https://au.store.bambulab.com/products/h2s?id=636702095257538565"},
+    {"region":"CA","product":"H2S","variant":"H2S","url":"https://ca.store.bambulab.com/products/h2s?id=636702724706619397"}
   ]
 }
